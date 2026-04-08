@@ -1,0 +1,11 @@
+name: "image-augmentation-optimizer"
+version: "1.0.0"
+description: "An agent acts as an MLOps engineer, applying sequential image processing operations to corrupted data to maximize downstream classifier accuracy."
+author: "Hackathon Participant"
+tasks:
+  - id: "task_1_easy_brightness"
+    difficulty: "easy"
+  - id: "task_2_medium_noise"
+    difficulty: "medium"
+  - id: "task_3_hard_pipeline"
+    difficulty: "hard"
