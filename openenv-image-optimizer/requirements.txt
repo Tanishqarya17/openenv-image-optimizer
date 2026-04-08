@@ -1,4 +1,5 @@
 pydantic
 openai
 httpx
-streamlit
+fastapi
+uvicorn
