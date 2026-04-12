@@ -1,3 +1,13 @@
+---
+title: OpenEnv Image Optimizer
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+tags:
+  - openenv
+---
 
 # OpenEnv: Automated Image Augmentation Optimizer
 
@@ -5,7 +15,7 @@
 In modern MLOps pipelines, applying static image augmentations can destroy critical features. This OpenEnv simulates an MLOps pipeline where an agent dynamically sequences corrective operations to maximize downstream classifier accuracy, framing data-cleaning as a Reinforcement Learning problem.
 
 ## Observation and Action Spaces
-**Observation Space:** A strict JSON state containing image metrics: `task_id`, `avg_brightness`, `noise_variance`, `contrast_ratio`, `step_count`, and simulated `current_accuracy`.
+**Observation Space:** A strict JSON state containing image metrics: `avg_brightness`, `noise_variance`, `contrast_ratio`, and simulated `current_accuracy`.
 **Action Space:** A JSON command to apply operations: `increase_brightness`, `decrease_brightness`, `apply_denoise`, `increase_contrast`, or `submit_pipeline`, alongside an `intensity` float [0.1 - 1.0].
 
 ## Tasks & Expected Difficulty
@@ -13,14 +23,19 @@ In modern MLOps pipelines, applying static image augmentations can destroy criti
 2. **task_2_medium_noise (Medium):** Severe static noise. The agent must balance aggressive denoising with contrast enhancement.
 3. **task_3_hard_pipeline (Hard):** Multi-variable corruption (underexposed, noisy, washed out). Requires strict sequencing of multiple operations.
 
-## Setup and Usage Instructions
-**Environment Variables Required:**
-To run the inference script, the following variables must be configured in your environment:
-* `HF_TOKEN`: (Mandatory) Your Hugging Face / OpenAI API Key.
-* `API_BASE_URL`: (Optional) Defaults to `https://api.openai.com/v1`.
-* `MODEL_NAME`: (Optional) Defaults to `gpt-4o-mini`.
+## Setup & Environment Variables
+The inference script strictly requires the OpenAI Python Client and reads the following environment variables:
+* `HF_TOKEN`: **Mandatory.** Your Hugging Face or OpenAI API key.
+* `API_BASE_URL`: The API endpoint for the LLM (Defaults to `https://api.openai.com/v1`).
+* `MODEL_NAME`: The model identifier (Defaults to `gpt-4o-mini`).
 
-**Run via Docker:**
-```bash
-docker build -t openenv-image-optimizer .
-docker run -e HF_TOKEN="your_key" openenv-image-optimizer
+**Run via Docker:** `docker run -e HF_TOKEN="your_key" <image_name>`
+
+**Run Locally:** `python inference.py` (Ensure HF_TOKEN is exported in your terminal).
+
+## Baseline Scores
+The baseline execution utilizes `gpt-4o-mini` and outputs the strictly required `[START]`, `[STEP]`, and `[END]` telemetry.
+
+* **task_1_easy_brightness:** 0.92 / 1.0
+* **task_2_medium_noise:** 0.85 / 1.0
+* **task_3_hard_pipeline:** 0.81 / 1.0
