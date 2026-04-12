@@ -1,5 +1,14 @@
 
-<img width="1055" height="222" alt="image" src="https://github.com/user-attachments/assets/370f5615-531a-4f24-b7d4-cb9c9077532b" />
+---
+title: OpenEnv Image Optimizer
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+tags:
+  - openenv
+---
 
 # OpenEnv: Automated Image Augmentation Optimizer
 
