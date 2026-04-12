@@ -1,0 +1,11 @@
+version: "1.0"
+name: "image-augmentation-optimizer"
+description: "An RL environment where an agent acts as an MLOps orchestrator, rescuing corrupted image datasets to maximize downstream classifier accuracy."
+tags:
+  - data-cleaning
+  - computer-vision
+  - mlops
+tasks:
+  - task_1_easy_brightness
+  - task_2_medium_noise
+  - task_3_hard_pipeline
