@@ -1,5 +1,5 @@
 
-<img width="434" height="247" alt="image" src="https://github.com/user-attachments/assets/66d86709-b1d0-4b81-bb1f-69332dd9bdd0" />
+<img width="1812" height="243" alt="image" src="https://github.com/user-attachments/assets/f0ec218c-a86a-49d4-a044-39ccac36e1b6" />
 
 # OpenEnv: Automated Image Augmentation Optimizer
 
