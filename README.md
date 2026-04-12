@@ -1,45 +1,36 @@
-# OpenEnv: Automated Image Augmentation Policy Optimizer
+---
+title: OpenEnv Image Optimizer
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+tags:
+  - openenv
+---
+
+# OpenEnv: Automated Image Augmentation Optimizer
 
 ## Description and Motivation
-When deploying Computer Vision models in real-world scenarios (e.g., edge IoT cameras, medical imaging), input data is frequently corrupted by poor lighting, sensor noise, or weather conditions. Standard, hardcoded image processing pipelines fail to adapt to dynamic corruption. 
-
-This OpenEnv simulates an MLOps pipeline where an agent must dynamically analyze image metrics and apply a sequence of corrective operations (brightness adjustments, denoising, contrast enhancements) to maximize the accuracy of a downstream classifier. It frames data-cleaning as a Reinforcement Learning problem, where the agent is penalized for destructive operations and rewarded for recovering classifier accuracy.
+In modern MLOps pipelines, applying static image augmentations can destroy critical features. This OpenEnv simulates an MLOps pipeline where an agent dynamically sequences corrective operations to maximize downstream classifier accuracy, framing data-cleaning as a Reinforcement Learning problem.
 
 ## Observation and Action Spaces
-
-### Observation Space
-The agent receives a strict JSON state containing extracted metrics of the current image batch, rather than raw pixel tensors.
-* `task_id` (str): The current difficulty level being evaluated.
-* `avg_brightness` (float): Current image brightness [0.0 (black) to 1.0 (white)].
-* `noise_variance` (float): Current noise level [0.0 (clean) to 1.0 (heavy static)].
-* `contrast_ratio` (float): Current contrast [0.0 (washed out) to 1.0 (sharp)].
-* `current_accuracy` (float): Simulated accuracy of the downstream classifier [0.0 to 1.0]. Target is > 0.85.
-* `step_count` (int): Number of processing operations applied so far.
-
-### Action Space
-The agent outputs a strict JSON command to apply OpenCV-style transformations.
-* `operation` (Literal): Must be one of `increase_brightness`, `decrease_brightness`, `apply_denoise`, `increase_contrast`, or `submit_pipeline`.
-* `intensity` (float): The strength of the operation, ranging from `0.1` (slight adjustment) to `1.0` (maximum application).
+**Observation Space:** A strict JSON state containing image metrics: `task_id`, `avg_brightness`, `noise_variance`, `contrast_ratio`, `step_count`, and simulated `current_accuracy`.
+**Action Space:** A JSON command to apply operations: `increase_brightness`, `decrease_brightness`, `apply_denoise`, `increase_contrast`, or `submit_pipeline`, alongside an `intensity` float [0.1 - 1.0].
 
 ## Tasks & Expected Difficulty
-
-1. **Task 1: The Night Vision Problem (`task_1_easy_brightness`)**
-   * **Difficulty:** Easy
-   * **Description:** The initial image state is heavily underexposed (brightness = 0.1) but otherwise clean. The agent must successfully increase brightness without blowing out the highlights to achieve >85% accuracy.
-
-2. **Task 2: The Noisy Sensor (`task_2_medium_noise`)**
-   * **Difficulty:** Medium
-   * **Description:** The image has standard exposure but severe static noise (noise = 0.8) and degraded contrast. The agent must balance aggressive denoising, which inherently blurs the image and reduces contrast, with contrast enhancement.
-
-3. **Task 3: The Mixed Corruption Pipeline (`task_3_hard_pipeline`)**
-   * **Difficulty:** Hard
-   * **Description:** The image suffers from multi-variable corruption: underexposed, noisy, and washed out. The agent must sequence multiple operations in the correct order to reach >90% accuracy before the step limit expires.
+1. **task_1_easy_brightness (Easy):** Image is heavily underexposed. The agent must increase brightness without blowing out highlights.
+2. **task_2_medium_noise (Medium):** Severe static noise. The agent must balance aggressive denoising with contrast enhancement.
+3. **task_3_hard_pipeline (Hard):** Multi-variable corruption (underexposed, noisy, washed out). Requires strict sequencing of multiple operations.
 
 ## Setup and Usage Instructions
+**Environment Variables Required:**
+To run the inference script, the following variables must be configured in your environment:
+* `HF_TOKEN`: (Mandatory) Your Hugging Face / OpenAI API Key.
+* `API_BASE_URL`: (Optional) Defaults to `https://api.openai.com/v1`.
+* `MODEL_NAME`: (Optional) Defaults to `gpt-4o-mini`.
 
-### Local Development
-1. Clone the repository and navigate to the root directory.
-2. Create and activate a Python 3.10 virtual environment.
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
+**Run via Docker:**
+```bash
+docker build -t openenv-image-optimizer .
+docker run -e HF_TOKEN="your_key" openenv-image-optimizer
