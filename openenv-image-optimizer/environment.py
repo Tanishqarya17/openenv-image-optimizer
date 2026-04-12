@@ -45,13 +45,15 @@ class ImageOptimizerEnv:
         return ActionResult(observation=obs, reward=0.0, done=False)
 
     def _calculate_accuracy(self) -> float:
-        # Ideal states: Brightness ~0.6, Noise ~0.0, Contrast ~0.9
-        b_penalty = abs(0.6 - self.brightness) * 1.5
-        n_penalty = self.noise * 2.0
-        c_penalty = abs(0.9 - self.contrast) * 1.2
-        
-        base = 1.0 - (b_penalty + n_penalty + c_penalty)
-        return max(0.0, min(1.0, base))
+            # Ideal states: Brightness ~0.6, Noise ~0.0, Contrast ~0.9
+            b_penalty = abs(0.6 - self.brightness) * 1.5
+            n_penalty = self.noise * 2.0
+            c_penalty = abs(0.9 - self.contrast) * 1.2
+            
+            base = 1.0 - (b_penalty + n_penalty + c_penalty)
+            
+            # Strict OpenEnv Clamping: Must be between 0 and 1 (exclusive)
+            return max(0.01, min(0.99, base))
 
     def _get_obs(self) -> ImageObservation:
         return ImageObservation(

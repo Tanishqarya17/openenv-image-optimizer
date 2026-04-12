@@ -88,7 +88,8 @@ async def run_task(task_id: str, client: OpenAI):
             log_step(step=step, action=action_str, reward=reward, done=done, error=result.error)
 
             if done:
-                score = obs.current_accuracy # The final normalized score is the accuracy
+                # The final normalized score is the accuracy, strictly clamped
+                score = max(0.01, min(0.99, obs.current_accuracy)) 
                 break
 
         success = score >= 0.85
